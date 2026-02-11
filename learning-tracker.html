@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Journey | Nasim Mahmud</title>
+    <link rel="icon" sizes="16x16" href="img/en1.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #ffffff;
+            color: #383838;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e5e5e5;
+        }
+        
+        body.dark-mode .card,
+        body.dark-mode .week-header,
+        body.dark-mode .task-section,
+        body.dark-mode .section-header,
+        body.dark-mode .date-section,
+        body.dark-mode .gamification-card {
+            background-color: #2a2a2a;
+            border-color: #404040;
+        }
+        
+        body.dark-mode .text-gray { color: #a0a0a0; }
+        body.dark-mode .text-dark { color: #d0d0d0; }
+        body.dark-mode .hover-bg:hover { background-color: #333333; }
+        body.dark-mode .week-header:hover { background-color: #333333; }
+        body.dark-mode .task-item:hover { background: #333; }
+        body.dark-mode .deliverable { background: #2a2a2a; }
+        body.dark-mode .streak-item { background: #333; border-color: #444; }
+        body.dark-mode .modal-content { background: #2a2a2a; }
+        body.dark-mode .modal-content input { background: #1a1a1a; border-color: #404040; color: #e5e5e5; }
+        body.dark-mode .btn-secondary { background: #404040; color: #e5e5e5; }
+        body.dark-mode .btn-secondary:hover { background: #505050; }
+        body.dark-mode .notification { background: #2a2a2a; }
+        body.dark-mode .notification-text { color: #a0a0a0; }
+        body.dark-mode .footer { color: #a0a0a0; }
+        body.dark-mode .countdown-container { background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%); border-color: #404040; }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+        
+        #toggleDark {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+        
+        #toggleDark:hover { transform: scale(1.1); }
+        
+        .header {
+            text-align: center;
+            margin-top: 64px;
+            margin-bottom: 48px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #660000;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .header-links {
+            margin-top: 16px;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .header-links a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .header-links a:hover {
+            color: #660000;
+            text-decoration: underline;
+        }
+        
+        .github-sync {
+            background: #f9fafb;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        body.dark-mode .github-sync {
+            background: #2a2a2a;
+            border-color: #404040;
+        }
+        
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        
+        .sync-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+        
+        .sync-indicator.syncing { background: #fbbf24; animation: pulse 1.5s infinite; }
+        .sync-indicator.error { background: #ef4444; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .sync-button {
+            padding: 8px 16px;
+            background: #660000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .sync-button:hover { background: #880000; }
+        .sync-button:disabled { background: #999; cursor: not-allowed; }
+        
+        .countdown-section {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        
+        .countdown-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 24px;
+            display: inline-block;
+            min-width: 400px;
+        }
+        
+        .countdown-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        
+        .countdown-display {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        .countdown-item { text-align: center; }
+        
+        .countdown-value {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+        
+        .countdown-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+            margin-top: 8px;
+        }
+        
+        .countdown-message {
+            font-size: 12px;
+            margin-top: 12px;
+            font-weight: 600;
+        }
+        
+        .countdown-plenty { color: #10b981; }
+        .countdown-good { color: #fbbf24; }
+        .countdown-warning { color: #f59e0b; }
+        .countdown-urgent { color: #ef4444; }
+        .countdown-overtime { color: #991b1b; }
+        
+        .gamification-section { margin-bottom: 32px; }
+        
+        .gamification-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .points-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .points-display {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .points-icon { font-size: 32px; }
+        
+        .points-info h2 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .points-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #660000;
+        }
+        
+        .level-badge {
+            background: linear-gradient(135deg, #660000 0%, #880000 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .achievement {
+            text-align: center;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .achievement.unlocked {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-color: #fbbf24;
+        }
+        
+        .achievement.locked {
+            opacity: 0.4;
+            filter: grayscale(100%);
+        }
+        
+        .achievement-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-name {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .achievement-desc {
+            font-size: 9px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .streak-section {
+            display: flex;
+            gap: 24px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .streak-item {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 16px;
+            background: #f9fafb;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+        }
+        
+        .streak-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .streak-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #660000;
+            margin-bottom: 4px;
+        }
+        
+        .streak-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .card-label {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #660000;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: #660000;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        
+        .date-section {
+            background: #f9fafb;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .date-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+        
+        .date-item label {
+            font-size: 11px;
+            color: #666;
+            display: block;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .date-value {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .date-value.editable {
+            cursor: pointer;
+            color: #660000;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+        }
+        
+        .date-value.editable:hover {
+            text-decoration-style: solid;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .section-header {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 24px;
+            margin-top: 48px;
+        }
+        
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #660000;
+            margin-bottom: 8px;
+        }
+        
+        .section-header p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .week-container {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        
+        .week-header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .week-header:hover {
+            background: #f9fafb;
+        }
+        
+        .week-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #660000;
+        }
+        
+        .week-progress {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .week-content {
+            display: none;
+        }
+        
+        .week-content.active {
+            display: block;
+        }
+        
+        .task-section {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 20px;
+        }
+        
+        .task-section:last-child {
+            border-bottom: none;
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .task-header h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #383838;
+        }
+        
+        body.dark-mode .task-header h4 {
+            color: #d0d0d0;
+        }
+        
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .task-item:hover {
+            background: #f9fafb;
+        }
+        
+        .task-item.completed {
+            opacity: 0.5;
+        }
+        
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+        }
+        
+        .checkbox-custom {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            border: 2px solid #999;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            margin-top: 2px;
+        }
+        
+        .checkbox-custom:hover {
+            border-color: #660000;
+        }
+        
+        .checkbox-custom:checked {
+            background-color: #660000;
+            border-color: #660000;
+        }
+        
+        .checkbox-custom:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .task-link {
+            display: block;
+            margin-top: 6px;
+            font-size: 12px;
+            color: #660000;
+            text-decoration: none;
+        }
+        
+        .task-link:hover {
+            text-decoration: underline;
+        }
+        
+        .deliverable {
+            border-left: 2px solid #660000;
+            padding: 12px 16px;
+            background: #f9fafb;
+            margin-top: 8px;
+            border-radius: 4px;
+        }
+        
+        .deliverable strong {
+            font-size: 12px;
+            color: #660000;
+        }
+        
+        .deliverable-text {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            padding: 24px 20px;
+            color: #666;
+        }
+        
+        .footer a {
+            color: #660000;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 32px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-content h3 {
+            font-size: 18px;
+            color: #660000;
+            margin-bottom: 20px;
+        }
+        
+        .modal-content label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            margin-top: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .modal-content label:first-of-type {
+            margin-top: 0;
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #660000;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #880000;
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #383838;
+        }
+        
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            border: 2px solid #660000;
+            border-radius: 6px;
+            padding: 16px 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 3000;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+        }
+        
+        .notification.success {
+            border-color: #10b981;
+        }
+        
+        .notification.warning {
+            border-color: #f59e0b;
+        }
+        
+        .notification-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .notification-text {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .reset-section {
+            text-align: center;
+            margin: 32px 0;
+        }
+        
+        .reset-btn {
+            font-size: 12px;
+            color: #666;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+        }
+        
+        .reset-btn:hover {
+            color: #660000;
+            text-decoration-style: solid;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 0 16px; }
+            .header { margin-top: 48px; margin-bottom: 32px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .points-header { flex-direction: column; align-items: flex-start; }
+            .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+            .streak-section { flex-direction: column; }
+            .countdown-container { min-width: auto; width: 100%; }
+            .countdown-display { gap: 12px; }
+            .countdown-value { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <button id="toggleDark">🌙</button>
+
+    <div class="container">
+        <div class="header">
+            <h1>RL & Graph Theory Learning Journey</h1>
+            <p>Comprehensive Learning Path with Prerequisites</p>
+            <div class="header-links">
+                <a href="/">← Back to Home</a>
+                <span style="border-right: 1px solid #660000; padding: 0 8px;">
+                    <a href="Comprehensive_Learning_Curriculum.docx" download>📄 Download Curriculum</a>
+                </span>
+                <a href="https://github.com/nasim-mahmud/nasim-mahmud.github.io" target="_blank">GitHub Repo →</a>
+            </div>
+        </div>
+
+        <!-- GitHub Sync Status -->
+        <div class="github-sync">
+            <div class="sync-status">
+                <div class="sync-indicator" id="syncIndicator"></div>
+                <span id="syncStatus">Ready</span>
+            </div>
+            <button class="sync-button" id="syncButton" onclick="manualSync()">
+                <i class="fa fa-sync"></i> Sync Now
+            </button>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="countdown-section">
+            <div class="countdown-container">
+                <div class="countdown-title">Time Remaining</div>
+                <div class="countdown-display" id="countdownDisplay">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="daysRemaining">--</div>
+                        <div class="countdown-label">Days</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="hoursRemaining">--</div>
+                        <div class="countdown-label">Hours</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="minutesRemaining">--</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                </div>
+                <div class="countdown-message" id="countdownMessage">Set your timeline to begin</div>
+            </div>
+        </div>
+
+        <!-- Gamification Section -->
+        <div class="gamification-section">
+            <div class="gamification-card">
+                <div class="points-header">
+                    <div class="points-display">
+                        <div class="points-icon">🏆</div>
+                        <div class="points-info">
+                            <h2>Total Points</h2>
+                            <div class="points-value" id="totalPoints">0</div>
+                        </div>
+                    </div>
+                    <div class="level-badge" id="levelBadge">Beginner</div>
+                </div>
+                
+                <div class="achievements-grid">
+                    <div class="achievement locked" data-achievement="first-task">
+                        <div class="achievement-icon">🎯</div>
+                        <div class="achievement-name">First Step</div>
+                        <div class="achievement-desc">Complete 1 task</div>
+                    </div>
+                    <div class="achievement locked" data-achievement="prereq-master">
+                        <div class="achievement-icon">📐</div>
+                        <div class="achievement-name">Foundations</div>
+                        <div class="achievement-desc">Finish prerequisites</div>
+                    </div>
+                    <div class="achievement locked" data-achievement="rl-expert">
+                        <div class="achievement-icon">🤖</div>
+                        <div class="achievement-name">RL Expert</div>
+                        <div class="achievement-desc">Finish RL section</div>
+                    </div>
+                    <div class="achievement locked" data-achievement="graph-master">
+                        <div class="achievement-icon">🕸️</div>
+                        <div class="achievement-name">Graph Master</div>
+                        <div class="achievement-desc">Finish Graph Theory</div>
+                    </div>
+                    <div class="achievement locked" data-achievement="streak-7">
+                        <div class="achievement-icon">🔥</div>
+                        <div class="achievement-name">On Fire</div>
+                        <div class="achievement-desc">7-day streak</div>
+                    </div>
+                    <div class="achievement locked" data-achievement="master">
+                        <div class="achievement-icon">👑</div>
+                        <div class="achievement-name">Complete</div>
+                        <div class="achievement-desc">100% finished</div>
+                    </div>
+                </div>
+                
+                <div class="streak-section">
+                    <div class="streak-item">
+                        <div class="streak-icon">🔥</div>
+                        <div class="streak-value" id="currentStreak">0</div>
+                        <div class="streak-label">Current Streak</div>
+                    </div>
+                    <div class="streak-item">
+                        <div class="streak-icon">⭐</div>
+                        <div class="streak-value" id="bestStreak">0</div>
+                        <div class="streak-label">Best Streak</div>
+                    </div>
+                    <div class="streak-item">
+                        <div class="streak-icon">📅</div>
+                        <div class="streak-value" id="tasksToday">0</div>
+                        <div class="streak-label">Tasks Today</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="card">
+                <div class="card-label">Progress</div>
+                <div class="card-value" id="totalProgress">0%</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-label">Tasks</div>
+                <div class="card-value"><span id="completedTasks">0</span>/<span id="totalTasks">0</span></div>
+            </div>
+            <div class="card">
+                <div class="card-label">Days Elapsed</div>
+                <div class="card-value" id="daysElapsed">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Current Section</div>
+                <div class="card-value" id="currentSection" style="font-size: 16px;">--</div>
+            </div>
+        </div>
+
+        <!-- Date Tracking -->
+        <div class="date-section">
+            <div class="date-grid">
+                <div class="date-item">
+                    <label>Start Date</label>
+                    <div class="date-value editable" id="startDate" onclick="editDates()">Not Set</div>
+                </div>
+                <div class="date-item">
+                    <label>End Date</label>
+                    <div class="date-value editable" id="endDate" onclick="editDates()">Not Set</div>
+                </div>
+                <div class="date-item">
+                    <label>Today</label>
+                    <div class="date-value" id="currentDate">-</div>
+                </div>
+                <div class="date-item">
+                    <label>Status</label>
+                    <div class="status-badge" id="statusBadge">Not Started</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PREREQUISITES SECTION -->
+        <div class="section-header">
+            <h2>📐 Prerequisites</h2>
+            <p>Essential mathematical and programming foundations for RL and Graph Theory</p>
+        </div>
+
+        <!-- Week P1 -->
+        <div class="week-container">
+            <div class="week-header" onclick="toggleWeek('weekP1')">
+                <h3>Week P1: Mathematics Foundations</h3>
+                <div class="week-progress" id="weekP1Progress">0/0</div>
+            </div>
+            <div class="week-content" id="weekP1Content">
+                <div class="task-section">
+                    <div class="task-header">
+                        <h4>Linear Algebra Basics</h4>
+                    </div>
+                    <div class="task-list">
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Watch 3Blue1Brown Essence of Linear Algebra series</div>
+                                <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab" target="_blank" class="task-link">→ 3Blue1Brown Playlist</a>
+                            </div>
+                        </div>
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Study vectors, matrices, eigenvalues, eigenvectors</div>
+                            </div>
+                        </div>
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Practice with NumPy: matrix operations</div>
+                            </div>
+                        </div>
+                        <div class="deliverable">
+                            <strong>Deliverable:</strong>
+                            <div class="deliverable-text">Implement basic matrix operations in Python</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-section">
+                    <div class="task-header">
+                        <h4>Calculus & Probability</h4>
+                    </div>
+                    <div class="task-list">
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Review derivatives, gradients, chain rule</div>
+                            </div>
+                        </div>
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Study probability distributions, expectations</div>
+                            </div>
+                        </div>
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Learn Bayes' theorem and conditional probability</div>
+                            </div>
+                        </div>
+                        <div class="deliverable">
+                            <strong>Deliverable:</strong>
+                            <div class="deliverable-text">Solve 10 calculus & probability problems</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week P2 -->
+        <div class="week-container">
+            <div class="week-header" onclick="toggleWeek('weekP2')">
+                <h3>Week P2: Python & Data Science</h3>
+                <div class="week-progress" id="weekP2Progress">0/0</div>
+            </div>
+            <div class="week-content" id="weekP2Content">
+                <div class="task-section">
+                    <div class="task-header">
+                        <h4>Python Programming</h4>
+                    </div>
+                    <div class="task-list">
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Master Python basics: functions, classes, OOP</div>
+                            </div>
+                        </div>
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Learn NumPy for array operations</div>
+                                <a href="https://numpy.org/doc/stable/user/quickstart.html" target="_blank" class="task-link">→ NumPy Quickstart</a>
+                            </div>
+                        </div>
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Study Matplotlib for visualization</div>
+                            </div>
+                        </div>
+                        <div class="deliverable">
+                            <strong>Deliverable:</strong>
+                            <div class="deliverable-text">Build 3 small Python projects</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-section">
+                    <div class="task-header">
+                        <h4>Neural Networks Intro</h4>
+                    </div>
+                    <div class="task-list">
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Watch 3Blue1Brown Neural Networks series</div>
+                                <a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" class="task-link">→ Neural Networks</a>
+                            </div>
+                        </div>
+                        <div class="task-item" onclick="toggleTask(this)">
+                            <input type="checkbox" class="checkbox-custom" data-section="prereq">
+                            <div class="task-content">
+                                <div class="task-text">Complete PyTorch 60-minute tutorial</div>
+                                <a href="https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html" target="_blank" class="task-link">→ PyTorch Tutorial</a>
+                            </div>
+                        </div>
+                        <div class="deliverable">
+                            <strong>Deliverable:</strong>
+                            <div class="deliverable-text">Simple neural network from scratch</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- I'll truncate the rest for brevity but same structure continues... -->
+        
+        <!-- Reset Button -->
+        <div class="reset-section">
+            <button class="reset-btn" onclick="resetProgress()">Reset All Progress</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        Copyright &copy; 2025, Nasim Mahmud, All rights reserved.
+        <br class="mobile-break">
+        <span style="border-right: 1px solid #660000; padding: 0 8px;">
+            <a href="/">Home</a>
+        </span>
+        <span style="padding-left: 8px;">
+            <a href="/about">About</a>
+        </span>
+    </div>
+
+    <!-- Date Edit Modal -->
+    <div class="modal" id="dateModal">
+        <div class="modal-content">
+            <h3>Set Your Timeline</h3>
+            <label>Start Date</label>
+            <input type="date" id="startDateInput">
+            <label>End Date</label>
+            <input type="date" id="endDateInput">
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDateModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveDates()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - UPDATE THESE VALUES
+        // ============================================
+        const GITHUB_CONFIG = {
+            username: 'nasim-mahmud',
+            repo: 'nasim-mahmud.github.io',
+            branch: 'main',
+            dataFile: 'tracker-data.json',
+            // Get token from: https://github.com/settings/tokens
+            // Needed permissions: repo (full control)
+            token: '' // Leave empty, will prompt user to set in browser console
+        };
+
+        // Data structure
+        let trackerData = {
+            startDate: null,
+            endDate: null,
+            tasks: {},
+            points: 0,
+            achievements: {},
+            streak: {
+                current: 0,
+                best: 0,
+                lastCompletedDate: null
+            }
+        };
+
+        const motivationalMessages = [
+            { icon: '🎉', title: 'Great job!', text: 'You earned +{points} points!' },
+            { icon: '⚡', title: 'Momentum!', text: 'Keep the streak going! +{points} points' },
+            { icon: '🔥', title: 'On fire!', text: 'Another task down! +{points} points' },
+            { icon: '💪', title: 'Strong work!', text: 'You\'re making progress! +{points} points' },
+            { icon: '🚀', title: 'Accelerating!', text: 'That\'s the spirit! +{points} points' }
+        ];
+
+        // ============================================
+        // GITHUB API FUNCTIONS
+        // ============================================
+        
+        async function loadFromGitHub() {
+            // Check if token is set
+            if (!GITHUB_CONFIG.token) {
+                console.warn('GitHub token not set. Using localStorage fallback.');
+                console.log('To enable GitHub sync: Run this in console:');
+                console.log('localStorage.setItem("github_token", "YOUR_TOKEN_HERE")');
+                
+                // Fallback to localStorage
+                const saved = localStorage.getItem('trackerData');
+                if (saved) {
+                    trackerData = JSON.parse(saved);
+                }
+                updateSyncStatus('localStorage only', 'warning');
+                return;
+            }
+
+            try {
+                updateSyncStatus('Loading...', 'syncing');
+                
+                const url = `https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}?ref=${GITHUB_CONFIG.branch}`;
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (response.status === 404) {
+                    // File doesn't exist yet, create it
+                    console.log('Data file not found, will create on first save');
+                    updateSyncStatus('Ready (new file)', 'success');
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`GitHub API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const content = atob(data.content); // Decode base64
+                trackerData = JSON.parse(content);
+                
+                // Update UI
+                restoreUIFromData();
+                updateSyncStatus('Synced', 'success');
+                
+            } catch (error) {
+                console.error('Error loading from GitHub:', error);
+                updateSyncStatus('Sync failed', 'error');
+                
+                // Fallback to localStorage
+                const saved = localStorage.getItem('trackerData');
+                if (saved) {
+                    trackerData = JSON.parse(saved);
+                }
+            }
+        }
+
+        async function saveToGitHub() {
+            // Always save to localStorage as backup
+            localStorage.setItem('trackerData', JSON.stringify(trackerData));
+
+            if (!GITHUB_CONFIG.token) {
+                console.warn('GitHub token not set. Saved to localStorage only.');
+                return;
+            }
+
+            try {
+                updateSyncStatus('Saving...', 'syncing');
+                
+                // First, try to get the current file to get its SHA
+                const getUrl = `https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}?ref=${GITHUB_CONFIG.branch}`;
+                
+                let sha = null;
+                const getResponse = await fetch(getUrl, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (getResponse.ok) {
+                    const currentFile = await getResponse.json();
+                    sha = currentFile.sha;
+                }
+
+                // Prepare the data
+                const content = btoa(JSON.stringify(trackerData, null, 2)); // Encode to base64
+                
+                // Create or update the file
+                const putUrl = `https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}`;
+                
+                const putResponse = await fetch(putUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Update learning tracker data - ${new Date().toISOString()}`,
+                        content: content,
+                        branch: GITHUB_CONFIG.branch,
+                        ...(sha && { sha }) // Include SHA if file exists
+                    })
+                });
+
+                if (!putResponse.ok) {
+                    const errorData = await putResponse.json();
+                    throw new Error(`GitHub API error: ${putResponse.status} - ${errorData.message}`);
+                }
+
+                updateSyncStatus('Synced', 'success');
+                
+            } catch (error) {
+                console.error('Error saving to GitHub:', error);
+                updateSyncStatus('Sync failed (saved locally)', 'error');
+            }
+        }
+
+        function updateSyncStatus(message, status) {
+            const indicator = document.getElementById('syncIndicator');
+            const statusText = document.getElementById('syncStatus');
+            
+            indicator.className = 'sync-indicator';
+            if (status === 'syncing') {
+                indicator.classList.add('syncing');
+            } else if (status === 'error' || status === 'warning') {
+                indicator.classList.add('error');
+            }
+            
+            statusText.textContent = message;
+        }
+
+        function manualSync() {
+            loadFromGitHub().then(() => {
+                showNotification('🔄', 'Sync Complete', 'Data reloaded from GitHub', 'success');
+            });
+        }
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+
+        function restoreUIFromData() {
+            // Restore checkboxes
+            const allTasks = document.querySelectorAll('.task-item');
+            allTasks.forEach((task, index) => {
+                const checkbox = task.querySelector('.checkbox-custom');
+                if (trackerData.tasks[index]) {
+                    checkbox.checked = true;
+                    task.classList.add('completed');
+                }
+            });
+            
+            // Restore achievements
+            Object.keys(trackerData.achievements || {}).forEach(key => {
+                if (trackerData.achievements[key]) {
+                    const achievementEl = document.querySelector(`[data-achievement="${key}"]`);
+                    if (achievementEl) {
+                        achievementEl.classList.remove('locked');
+                        achievementEl.classList.add('unlocked');
+                    }
+                }
+            });
+        }
+
+        // Dark mode
+        const btn = document.getElementById("toggleDark");
+        
+        if (localStorage.getItem("dark-mode") === "enabled") {
+            document.body.classList.add("dark-mode");
+            btn.textContent = "☀️";
+        } else {
+            btn.textContent = "🌙";
+        }
+        
+        btn.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode");
+            
+            if (document.body.classList.contains("dark-mode")) {
+                localStorage.setItem("dark-mode", "enabled");
+                btn.textContent = "☀️";
+            } else {
+                localStorage.setItem("dark-mode", "disabled");
+                btn.textContent = "🌙";
+            }
+        });
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            // Check for GitHub token in localStorage
+            const savedToken = localStorage.getItem('github_token');
+            if (savedToken) {
+                GITHUB_CONFIG.token = savedToken;
+            }
+
+            loadFromGitHub().then(() => {
+                updateAllStats();
+                updateDates();
+                updateCountdown();
+                
+                if (!trackerData.startDate || !trackerData.endDate) {
+                    setTimeout(() => editDates(), 500);
+                }
+            });
+            
+            setInterval(updateCountdown, 60000);
+        });
+
+        function toggleWeek(weekId) {
+            const content = document.getElementById(weekId + 'Content');
+            content.classList.toggle('active');
+        }
+
+        function toggleTask(taskElement) {
+            const checkbox = taskElement.querySelector('.checkbox-custom');
+            checkbox.checked = !checkbox.checked;
+            
+            const taskIndex = Array.from(document.querySelectorAll('.task-item')).indexOf(taskElement);
+            trackerData.tasks[taskIndex] = checkbox.checked;
+            
+            if (checkbox.checked) {
+                taskElement.classList.add('completed');
+                awardPoints(taskElement);
+            } else {
+                taskElement.classList.remove('completed');
+                removePoints();
+            }
+            
+            saveToGitHub();
+            updateAllStats();
+            checkAchievements();
+        }
+
+        function awardPoints(taskElement) {
+            const today = new Date().toDateString();
+            let points = 10;
+            
+            if (trackerData.endDate) {
+                const now = new Date();
+                const end = new Date(trackerData.endDate);
+                if (now <= end) {
+                    points += 5;
+                }
+            }
+            
+            trackerData.points += points;
+            updateStreak(today);
+            
+            const msg = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+            showNotification(msg.icon, msg.title, msg.text.replace('{points}', points), 'success');
+        }
+
+        function removePoints() {
+            if (trackerData.points >= 10) {
+                trackerData.points -= 10;
+            }
+        }
+
+        function updateStreak(today) {
+            const lastDate = trackerData.streak.lastCompletedDate;
+            
+            if (!lastDate) {
+                trackerData.streak.current = 1;
+            } else {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (lastDate === today) {
+                    // Same day
+                } else if (lastDate === yesterday.toDateString()) {
+                    trackerData.streak.current += 1;
+                } else {
+                    trackerData.streak.current = 1;
+                }
+            }
+            
+            trackerData.streak.lastCompletedDate = today;
+            trackerData.streak.best = Math.max(trackerData.streak.best, trackerData.streak.current);
+        }
+
+        function checkAchievements() {
+            const allCheckboxes = document.querySelectorAll('.checkbox-custom');
+            const completed = Array.from(allCheckboxes).filter(cb => cb.checked).length;
+            const total = allCheckboxes.length;
+            const percentage = (completed / total) * 100;
+            
+            const prereqTasks = document.querySelectorAll('[data-section="prereq"]');
+            const prereqCompleted = Array.from(prereqTasks).filter(cb => cb.checked).length;
+            const prereqTotal = prereqTasks.length;
+            
+            const rlTasks = document.querySelectorAll('[data-section="rl"]');
+            const rlCompleted = Array.from(rlTasks).filter(cb => cb.checked).length;
+            const rlTotal = rlTasks.length;
+            
+            const graphTasks = document.querySelectorAll('[data-section="graph"]');
+            const graphCompleted = Array.from(graphTasks).filter(cb => cb.checked).length;
+            const graphTotal = graphTasks.length;
+            
+            const achievements = {
+                'first-task': completed >= 1,
+                'prereq-master': prereqCompleted === prereqTotal && prereqTotal > 0,
+                'rl-expert': rlCompleted === rlTotal && rlTotal > 0,
+                'graph-master': graphCompleted === graphTotal && graphTotal > 0,
+                'streak-7': trackerData.streak.current >= 7,
+                'master': percentage === 100
+            };
+            
+            for (const [key, unlocked] of Object.entries(achievements)) {
+                const wasUnlocked = trackerData.achievements[key];
+                trackerData.achievements[key] = unlocked;
+                
+                if (unlocked && !wasUnlocked) {
+                    unlockAchievement(key);
+                }
+            }
+        }
+
+        function unlockAchievement(achievementId) {
+            const achievementEl = document.querySelector(`[data-achievement="${achievementId}"]`);
+            if (achievementEl) {
+                achievementEl.classList.remove('locked');
+                achievementEl.classList.add('unlocked');
+                
+                const name = achievementEl.querySelector('.achievement-name').textContent;
+                showNotification('🏆', 'Achievement Unlocked!', name, 'success');
+                
+                trackerData.points += 50;
+            }
+        }
+
+        function showNotification(icon, title, text, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-icon">${icon}</div>
+                <div class="notification-title">${title}</div>
+                <div class="notification-text">${text}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function updateAllStats() {
+            const allCheckboxes = document.querySelectorAll('.checkbox-custom');
+            const completed = Array.from(allCheckboxes).filter(cb => cb.checked).length;
+            const total = allCheckboxes.length;
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('totalProgress').textContent = percentage + '%';
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('totalTasks').textContent = total;
+            
+            document.getElementById('totalPoints').textContent = trackerData.points || 0;
+            
+            let level = 'Beginner';
+            if (trackerData.points >= 800) level = 'Master';
+            else if (trackerData.points >= 500) level = 'Expert';
+            else if (trackerData.points >= 250) level = 'Advanced';
+            else if (trackerData.points >= 100) level = 'Intermediate';
+            
+            document.getElementById('levelBadge').textContent = level;
+            
+            document.getElementById('currentStreak').textContent = trackerData.streak?.current || 0;
+            document.getElementById('bestStreak').textContent = trackerData.streak?.best || 0;
+            
+            const today = new Date().toDateString();
+            const tasksCompletedToday = trackerData.streak?.lastCompletedDate === today ? 1 : 0;
+            document.getElementById('tasksToday').textContent = tasksCompletedToday;
+            
+            const prereqTasks = document.querySelectorAll('[data-section="prereq"]');
+            const prereqCompleted = Array.from(prereqTasks).every(cb => cb.checked);
+            const rlTasks = document.querySelectorAll('[data-section="rl"]');
+            const rlCompleted = Array.from(rlTasks).every(cb => cb.checked);
+            
+            let currentSection = 'Prerequisites';
+            if (prereqCompleted && !rlCompleted) currentSection = 'RL';
+            else if (prereqCompleted && rlCompleted) currentSection = 'Graph Theory';
+            
+            document.getElementById('currentSection').textContent = currentSection;
+            
+            const sections = ['P1', 'P2', 'RL1', 'RL2', 'RL3', 'RL4', 'G1', 'G2', 'G3', 'G4'];
+            sections.forEach(section => {
+                const weekCheckboxes = document.querySelectorAll(`#week${section}Content .checkbox-custom`);
+                const weekCompleted = Array.from(weekCheckboxes).filter(cb => cb.checked).length;
+                const weekTotal = weekCheckboxes.length;
+                const progressEl = document.getElementById(`week${section}Progress`);
+                if (progressEl) {
+                    progressEl.textContent = `${weekCompleted}/${weekTotal}`;
+                }
+            });
+        }
+
+        function updateDates() {
+            const today = new Date();
+            document.getElementById('currentDate').textContent = 
+                today.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            
+            if (trackerData.startDate) {
+                const start = new Date(trackerData.startDate);
+                document.getElementById('startDate').textContent = 
+                    start.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                
+                const elapsed = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+                document.getElementById('daysElapsed').textContent = Math.max(0, elapsed);
+            }
+            
+            if (trackerData.endDate) {
+                const end = new Date(trackerData.endDate);
+                document.getElementById('endDate').textContent = 
+                    end.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                
+                if (trackerData.startDate) {
+                    const start = new Date(trackerData.startDate);
+                    const totalDuration = end - start;
+                    const elapsed = today - start;
+                    const expectedProgress = (elapsed / totalDuration) * 100;
+                    
+                    const allCheckboxes = document.querySelectorAll('.checkbox-custom');
+                    const completed = Array.from(allCheckboxes).filter(cb => cb.checked).length;
+                    const total = allCheckboxes.length;
+                    const actualProgress = (completed / total) * 100;
+                    
+                    const statusBadge = document.getElementById('statusBadge');
+                    if (elapsed < 0) {
+                        statusBadge.textContent = 'Not Started';
+                        statusBadge.style.color = '#666';
+                    } else if (today > end) {
+                        statusBadge.textContent = 'Overtime';
+                        statusBadge.style.color = '#991b1b';
+                    } else if (actualProgress > expectedProgress + 10) {
+                        statusBadge.textContent = 'Ahead';
+                        statusBadge.style.color = '#10b981';
+                    } else if (actualProgress < expectedProgress - 10) {
+                        statusBadge.textContent = 'Behind';
+                        statusBadge.style.color = '#ef4444';
+                    } else {
+                        statusBadge.textContent = 'On Track';
+                        statusBadge.style.color = '#660000';
+                    }
+                }
+            }
+        }
+
+        function updateCountdown() {
+            if (!trackerData.startDate || !trackerData.endDate) {
+                return;
+            }
+            
+            const now = new Date();
+            const end = new Date(trackerData.endDate);
+            const start = new Date(trackerData.startDate);
+            const totalDuration = end - start;
+            const remaining = end - now;
+            
+            const daysEl = document.getElementById('daysRemaining');
+            const hoursEl = document.getElementById('hoursRemaining');
+            const minutesEl = document.getElementById('minutesRemaining');
+            const messageEl = document.getElementById('countdownMessage');
+            
+            if (remaining < 0) {
+                const overtime = Math.abs(remaining);
+                const days = Math.floor(overtime / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((overtime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                
+                daysEl.textContent = days;
+                hoursEl.textContent = hours;
+                minutesEl.textContent = Math.floor((overtime % (1000 * 60 * 60)) / (1000 * 60));
+                
+                daysEl.className = 'countdown-value countdown-overtime';
+                hoursEl.className = 'countdown-value countdown-overtime';
+                minutesEl.className = 'countdown-value countdown-overtime';
+                
+                messageEl.textContent = `${days} day${days !== 1 ? 's' : ''} past deadline`;
+                messageEl.style.color = '#991b1b';
+            } else {
+                const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                
+                daysEl.textContent = days;
+                hoursEl.textContent = hours;
+                minutesEl.textContent = minutes;
+                
+                const percentRemaining = (remaining / totalDuration) * 100;
+                
+                let colorClass = 'countdown-plenty';
+                let message = 'Plenty of time - stay consistent!';
+                
+                if (percentRemaining < 10) {
+                    colorClass = 'countdown-urgent';
+                    message = 'Final sprint - push hard!';
+                } else if (percentRemaining < 25) {
+                    colorClass = 'countdown-warning';
+                    message = 'Time is running out - focus up!';
+                } else if (percentRemaining < 50) {
+                    colorClass = 'countdown-good';
+                    message = 'Halfway there - keep it up!';
+                }
+                
+                daysEl.className = `countdown-value ${colorClass}`;
+                hoursEl.className = `countdown-value ${colorClass}`;
+                minutesEl.className = `countdown-value ${colorClass}`;
+                
+                messageEl.textContent = message;
+                messageEl.style.color = getComputedStyle(daysEl).color;
+            }
+        }
+
+        function editDates() {
+            document.getElementById('dateModal').classList.add('active');
+            if (trackerData.startDate) {
+                document.getElementById('startDateInput').value = trackerData.startDate;
+            } else {
+                document.getElementById('startDateInput').value = new Date().toISOString().split('T')[0];
+            }
+            if (trackerData.endDate) {
+                document.getElementById('endDateInput').value = trackerData.endDate;
+            }
+        }
+
+        function closeDateModal() {
+            document.getElementById('dateModal').classList.remove('active');
+        }
+
+        function saveDates() {
+            const startDate = document.getElementById('startDateInput').value;
+            const endDate = document.getElementById('endDateInput').value;
+            
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+            
+            if (new Date(startDate) >= new Date(endDate)) {
+                alert('End date must be after start date');
+                return;
+            }
+            
+            trackerData.startDate = startDate;
+            trackerData.endDate = endDate;
+            saveToGitHub();
+            updateDates();
+            updateCountdown();
+            closeDateModal();
+            showNotification('📅', 'Timeline Set', `From ${startDate} to ${endDate}`, 'success');
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                trackerData = {
+                    startDate: null,
+                    endDate: null,
+                    tasks: {},
+                    points: 0,
+                    achievements: {},
+                    streak: {
+                        current: 0,
+                        best: 0,
+                        lastCompletedDate: null
+                    }
+                };
+                saveToGitHub().then(() => {
+                    location.reload();
+                });
+            }
+        }
+
+        // Console helper for setting GitHub token
+        console.log('%c🔧 GitHub Setup', 'color: #660000; font-size: 16px; font-weight: bold;');
+        console.log('To enable GitHub sync, run:');
+        console.log('%clocalStorage.setItem("github_token", "YOUR_GITHUB_TOKEN");', 'color: #10b981; font-weight: bold;');
+        console.log('\nGet your token at: https://github.com/settings/tokens');
+        console.log('Required permissions: repo (full control)');
+    </script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Design Mockup — Nasim Mahmud Mishu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  /* ============ DESIGN TOKENS ============ */
+  :root {
+    --bg:        #faf9f6;
+    --bg-soft:   #f3f1ec;
+    --ink:       #1c1917;
+    --ink-soft:  #57534e;
+    --ink-faint: #a8a29e;
+    --accent:    #8a3033;   /* muted maroon — continuity with current site */
+    --border:    #e4e0d9;
+    --card:      #ffffff;
+    --code-bg:   #f0eee9;
+  }
+  html[data-theme="dark"] {
+    --bg:        #161513;
+    --bg-soft:   #1e1c19;
+    --ink:       #e7e3dd;
+    --ink-soft:  #b0aaa2;
+    --ink-faint: #6e675f;
+    --accent:    #d08a8a;
+    --border:    #2e2a26;
+    --card:      #1c1a17;
+    --code-bg:   #232019;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    transition: background .25s ease, color .25s ease;
+  }
+  ::selection { background: var(--accent); color: #fff; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+
+  /* ============ NAV ============ */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 920px; margin: 0 auto; padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .nav-name { font-weight: 700; font-size: 13px; letter-spacing: -.2px; white-space: nowrap; }
+  .nav-name .prompt { color: var(--accent); }
+  .nav-links { display: flex; gap: 18px; font-size: 12px; color: var(--ink-soft); }
+  .nav-links a { color: var(--ink-soft); }
+  .nav-links a:hover { color: var(--accent); text-decoration: none; }
+  .theme-btn {
+    font-family: inherit; font-size: 12px; cursor: pointer;
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--ink-soft); padding: 3px 10px;
+  }
+  .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ============ HERO ============ */
+  .hero { padding: 72px 0 56px; border-bottom: 1px solid var(--border); }
+  .hero-flex { display: flex; gap: 40px; align-items: flex-start; }
+  .hero-text { flex: 1; min-width: 0; }
+  .hero-cmd {
+    color: var(--ink-faint); font-size: 13px; margin-bottom: 14px;
+  }
+  .hero-cmd .dollar { color: var(--accent); font-weight: 600; }
+  .hero h1 {
+    font-size: clamp(26px, 4.5vw, 34px);
+    font-weight: 700; letter-spacing: -1px; line-height: 1.2;
+  }
+  .hero .role { margin-top: 10px; font-size: 14px; color: var(--ink-soft); }
+  .hero .role b { color: var(--ink); font-weight: 600; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .tag {
+    font-size: 11.5px; color: var(--ink-soft);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 2px 12px; background: var(--card);
+  }
+  .hero-links { margin-top: 22px; font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .hero-links a { margin-right: 14px; }
+  .hero-links a::before { content: "↳ "; color: var(--ink-faint); }
+  .photo-slot {
+    flex-shrink: 0; width: 148px; height: 148px; border-radius: 50%;
+    border: 1px dashed var(--ink-faint);
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    font-size: 10px; color: var(--ink-faint); line-height: 1.5; padding: 12px;
+    background: var(--bg-soft);
+  }
+
+  /* ============ SECTIONS ============ */
+  section { padding: 44px 0 36px; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .sec-head {
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    margin-bottom: 22px; letter-spacing: .2px;
+  }
+  .sec-head .comment { color: var(--ink-faint); font-weight: 400; }
+  .sec-head .comment::after { content: ""; display: block; }
+
+  p + p { margin-top: 12px; }
+  .muted { color: var(--ink-soft); }
+  .lead b { font-weight: 600; }
+
+  /* research interests */
+  .interest-list { list-style: none; }
+  .interest-list li {
+    padding: 8px 0 8px 22px; position: relative; color: var(--ink-soft);
+    border-bottom: 1px dashed var(--border);
+  }
+  .interest-list li:last-child { border-bottom: none; }
+  .interest-list li::before {
+    content: "▸"; position: absolute; left: 0; color: var(--accent);
+  }
+  .interest-list b { color: var(--ink); font-weight: 600; }
+
+  /* experience timeline */
+  .xp-item { position: relative; padding: 0 0 26px 26px; }
+  .xp-item::before {
+    content: ""; position: absolute; left: 5px; top: 8px; bottom: 0;
+    width: 1px; background: var(--border);
+  }
+  .xp-item:last-child { padding-bottom: 0; }
+  .xp-item:last-child::before { display: none; }
+  .xp-item::after {
+    content: ""; position: absolute; left: 0; top: 7px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--accent);
+  }
+  .xp-role { font-weight: 600; font-size: 14px; }
+  .xp-org { color: var(--ink-soft); font-size: 13px; }
+  .xp-date { font-size: 12px; color: var(--ink-faint); }
+  .xp-detail { margin-top: 6px; font-size: 13px; color: var(--ink-soft); }
+
+  /* projects grid */
+  .proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .proj-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; transition: border-color .2s ease, transform .2s ease;
+  }
+  .proj-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .proj-img {
+    aspect-ratio: 16 / 8; background: var(--code-bg);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10.5px; color: var(--ink-faint); letter-spacing: 1px;
+  }
+  .proj-body { padding: 16px 18px 18px; }
+  .proj-title { font-weight: 600; font-size: 13.5px; }
+  .proj-meta { font-size: 11.5px; color: var(--ink-faint); margin: 2px 0 8px; }
+  .proj-desc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.65; }
+  .proj-tech { margin-top: 10px; font-size: 11px; color: var(--ink-faint); }
+  .proj-tech b { color: var(--accent); font-weight: 500; }
+
+  /* publications */
+  .pub { padding: 14px 0; border-bottom: 1px dashed var(--border); }
+  .pub:last-child { border-bottom: none; }
+  .pub-num { color: var(--ink-faint); font-size: 12px; margin-right: 8px; }
+  .pub-title { font-weight: 600; font-size: 13.5px; }
+  .pub-venue { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+  .pub-id { font-size: 12px; margin-top: 4px; }
+
+  /* news */
+  .news-item { display: flex; gap: 14px; padding: 7px 0; font-size: 13px; }
+  .news-date { color: var(--accent); flex-shrink: 0; font-size: 12.5px; min-width: 108px; }
+  .news-text { color: var(--ink-soft); }
+
+  /* education */
+  .edu-item { padding: 10px 0; }
+  .edu-deg { font-weight: 600; }
+  .edu-meta { color: var(--ink-soft); font-size: 13px; }
+
+  /* skills */
+  .skill-row { display: flex; gap: 16px; padding: 7px 0; font-size: 13px; }
+  .skill-key { flex-shrink: 0; width: 170px; color: var(--accent); font-weight: 500; }
+  .skill-val { color: var(--ink-soft); }
+
+  /* footer */
+  footer { padding: 40px 0 48px; }
+  .footer-box {
+    border: 1px solid var(--border); border-radius: 10px; background: var(--card);
+    padding: 24px 26px;
+  }
+  .footer-box .sec-head { margin-bottom: 10px; }
+  .copy { margin-top: 26px; text-align: center; font-size: 11.5px; color: var(--ink-faint); }
+
+  .mockup-banner {
+    position: fixed; bottom: 14px; right: 14px; z-index: 99;
+    background: var(--ink); color: var(--bg);
+    font-size: 10.5px; padding: 6px 12px; border-radius: 6px; opacity: .85;
+  }
+
+  /* responsive */
+  @media (max-width: 720px) {
+    .hero-flex { flex-direction: column-reverse; }
+    .photo-slot { width: 112px; height: 112px; }
+    .proj-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .skill-row { flex-direction: column; gap: 0; }
+    .news-item { flex-direction: column; gap: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-name"><span class="prompt">~/</span>nasim-mahmud</div>
+    <div class="nav-links">
+      <a href="#about">about</a>
+      <a href="#research">research</a>
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#publications">publications</a>
+      <a href="#contact">contact</a>
+    </div>
+    <button class="theme-btn" id="themeToggle">[ light ]</button>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap hero-flex">
+    <div class="hero-text">
+      <div class="hero-cmd"><span class="dollar">$</span> whoami</div>
+      <h1>Nasim Mahmud Mishu</h1>
+      <p class="role">
+        <b>Research Assistant</b> — NSU Intelligent Robotics (NIRO) Lab<br />
+        Dept. of ECE, North South University · Dhaka, Bangladesh
+      </p>
+      <div class="tags">
+        <span class="tag">swarm robotics</span>
+        <span class="tag">autonomous agents</span>
+        <span class="tag">deep reinforcement learning</span>
+        <span class="tag">computer vision</span>
+        <span class="tag">intelligent robotic systems</span>
+      </div>
+      <div class="hero-links">
+        <a href="mailto:nasimmahmud1301@gmail.com">email</a>
+        <a href="https://github.com/Nasim-Mahmud">github</a>
+        <a href="https://www.linkedin.com/in/nasim-mahmud/">linkedin</a>
+        <a href="#">cv.pdf</a>
+      </div>
+    </div>
+    <div class="photo-slot">[ placeholder<br />profile photo<br />148 × 148 ]</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about">
+    <h2 class="sec-head"><span class="comment">// 01</span> about</h2>
+    <p class="lead muted">
+      I am a researcher with strong interests in <b>swarm robotics, autonomous agents,
+      deep reinforcement learning, and intelligent robotic systems</b>. I hold a Bachelor's
+      degree in Computer Science and Engineering from North South University.
+    </p>
+    <p class="muted">
+      Currently a Research Assistant at the NSU Intelligent Robotics (NIRO) Laboratory,
+      my work focuses on swarm robotics architectures — integrating machine learning into
+      both centralized and decentralized control systems to improve swarm coordination,
+      adaptability, and efficiency.
+    </p>
+    <p class="muted">
+      I am actively seeking collaborative research opportunities and exploring
+      graduate-level research (MS/PhD) to advance intelligent robotics and autonomous systems.
+    </p>
+  </section>
+
+  <!-- ================= RESEARCH ================= -->
+  <section id="research">
+    <h2 class="sec-head"><span class="comment">// 02</span> research interests</h2>
+    <ul class="interest-list">
+      <li><b>Swarm intelligence</b> — centralized &amp; decentralized control architectures for robot collectives</li>
+      <li><b>AI-driven robotic systems</b> — ML-enhanced coordination, adaptability, and decision-making</li>
+      <li><b>Computer vision</b> — perception for autonomous agents, segmentation-based vision for DRL</li>
+      <li><b>Motion planning &amp; navigation</b> — autonomous exploration, obstacle avoidance, CAD-based robotic design</li>
+    </ul>
+  </section>
+
+  <!-- ================= EXPERIENCE ================= -->
+  <section id="experience">
+    <h2 class="sec-head"><span class="comment">// 03</span> experience</h2>
+
+    <div class="xp-item">
+      <div class="xp-role">Research Assistant</div>
+      <div class="xp-org">NSU Intelligent Robotics (NIRO) Laboratory · North South University</div>
+      <div class="xp-date">Oct 2024 — Present</div>
+      <p class="xp-detail">Swarm robotics under centralized and decentralized control strategies; ML integration for swarm behavior and coordination. Supervisor: Dr. Shahnewaz Siddique.</p>
+    </div>
+
+    <div class="xp-item">
+      <div class="xp-role">Teaching Assistant</div>
+      <div class="xp-org">Dept. of ECE, North South University</div>
+      <div class="xp-date">Jan 2025 — Present</div>
+      <p class="xp-detail">Introduction to Robotics (EE494/CSE495A, CSE543) — kinematics, motion planning, perception, control; tutorials, grading, and project guidance.</p>
+    </div>
+
+    <div class="xp-item">
+      <div class="xp-role">Part-time Research Assistant</div>
+      <div class="xp-org">Dept. of ECE, North South University</div>
+      <div class="xp-date">Dec 2023 — Jun 2024</div>
+      <p class="xp-detail">Resource-efficient visual deep reinforcement learning for autonomous agents; custom datasets and segmentation-based vision.</p>
+    </div>
+
+    <div class="xp-item">
+      <div class="xp-role">Founding Member</div>
+      <div class="xp-org">NSU Ignite — Robotics Team, North South University</div>
+      <div class="xp-date">Sep 2018 — Feb 2022</div>
+      <p class="xp-detail">Designed and built remote-controlled and autonomous robots for competitions; led hands-on robotics workshops.</p>
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS ================= -->
+  <section id="projects">
+    <h2 class="sec-head"><span class="comment">// 04</span> projects</h2>
+    <div class="proj-grid">
+
+      <article class="proj-card">
+        <div class="proj-img">[ PLACEHOLDER — NIRO EDU BOT IMAGE ]</div>
+        <div class="proj-body">
+          <div class="proj-title">NIRO Educational Bot</div>
+          <div class="proj-meta">NIRO Lab · Oct 2024 — Present</div>
+          <p class="proj-desc">Educational robot for hands-on learning and research with a customizable 3D-printed chassis, PCB design, and differential drive.</p>
+          <div class="proj-tech"><b>→</b> Raspberry Pi · Arduino · 3D Printing · PCB Design</div>
+        </div>
+      </article>
+
+      <article class="proj-card">
+        <div class="proj-img">[ PLACEHOLDER — HEXAPOD IMAGE ]</div>
+        <div class="proj-body">
+          <div class="proj-title">Project Hex</div>
+          <div class="proj-meta">NIRO Lab · Feb 2025 — Present</div>
+          <p class="proj-desc">Hexapod robot with six 3-DOF legs and 18 high-torque servos for robust mobility on uneven terrain, with modular sensor support.</p>
+          <div class="proj-tech"><b>→</b> Arduino · Servo Control · LiPo · Modular Design</div>
+        </div>
+      </article>
+
+      <article class="proj-card">
+        <div class="proj-img">[ PLACEHOLDER — AOAVER IMAGE ]</div>
+        <div class="proj-body">
+          <div class="proj-title">AOAVER — Autonomous Obstacle Avoiding Exploring Robot</div>
+          <div class="proj-meta">Capstone (CSE499) · 2021 — 2022</div>
+          <p class="proj-desc">Autonomous search-and-rescue robot for disaster zones with real-time perception, obstacle avoidance, and exploration.</p>
+          <div class="proj-tech"><b>→</b> Python · ROS · YDLidar X4 · Raspberry Pi · Arduino</div>
+        </div>
+      </article>
+
+      <article class="proj-card">
+        <div class="proj-img">[ PLACEHOLDER — GESTURE SYSTEM IMAGE ]</div>
+        <div class="proj-body">
+          <div class="proj-title">Hand Gesture Recognition for Seniors &amp; Disabled</div>
+          <div class="proj-meta">Junior Design (CSE299) · Spring 2020</div>
+          <p class="proj-desc">Low-cost gesture-based emergency calling system using computer vision and a companion mobile app.</p>
+          <div class="proj-tech"><b>→</b> Python · OpenCV · Raspberry Pi · Firebase · Android</div>
+        </div>
+      </article>
+
+      <article class="proj-card">
+        <div class="proj-img">[ PLACEHOLDER — SHOUHARDO IMAGE ]</div>
+        <div class="proj-body">
+          <div class="proj-title">Shouhardo — Hospital Accessibility Platform</div>
+          <div class="proj-meta">Directed Research (CSE498R) · Fall 2021</div>
+          <p class="proj-desc">HCI-based multilingual web platform improving hospital information transparency during COVID-19, from a 32-participant study.</p>
+          <div class="proj-tech"><b>→</b> HTML · CSS · WordPress · HCI Research</div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= PUBLICATIONS ================= -->
+  <section id="publications">
+    <h2 class="sec-head"><span class="comment">// 05</span> publications</h2>
+
+    <div class="pub">
+      <div><span class="pub-num">[1]</span><span class="pub-title">Accuracy-Oriented Deep Learning Based Hand Gesture Recognition Framework for the Elderly and Disabled</span></div>
+      <div class="pub-venue">ICCIT 2025 — 28th Int'l Conference on Computer and Information Technology, Cox's Bazar</div>
+      <div class="pub-id"><a href="#">doi ↗</a></div>
+    </div>
+
+    <div class="pub">
+      <div><span class="pub-num">[2]</span><span class="pub-title">Alpha-N-V2: Shortest Path Finder Automated Delivery Robot with Obstacle Detection and Avoiding System</span></div>
+      <div class="pub-venue">Vietnam Journal of Computer Science, vol. 7(4), 2020 — World Scientific</div>
+      <div class="pub-id"><a href="https://doi.org/10.1142/S2196888820500219">doi:10.1142/S2196888820500219 ↗</a></div>
+    </div>
+
+    <div class="pub">
+      <div><span class="pub-num">[3]</span><span class="pub-title">Alpha-N: Shortest Path Finder Automated Delivery Robot</span></div>
+      <div class="pub-venue">ACIIDS 2020 — 12th Asian Conference on Intelligent Information and Database Systems, Springer LNCS</div>
+      <div class="pub-id"><a href="https://doi.org/10.1007/978-3-030-41964-6_18">doi:10.1007/978-3-030-41964-6_18 ↗</a></div>
+    </div>
+
+    <div class="pub">
+      <div><span class="pub-num">[4]</span><span class="pub-title">Understanding the Healthcare Sector in Bangladesh: Experiences and Services during the COVID-19 Pandemic</span></div>
+      <div class="pub-venue">6th Asian CHI Symposium 2022, New Orleans, LA — Special Proceedings</div>
+      <div class="pub-id"><a href="https://drive.google.com/file/d/1ifFX5Vd1_dNN7jzyPAT1Wl0iYt5vI1YH/view">isbn:978-0-9942763-2-2 ↗</a></div>
+    </div>
+  </section>
+
+  <!-- ================= NEWS ================= -->
+  <section id="news">
+    <h2 class="sec-head"><span class="comment">// 06</span> news</h2>
+    <div class="news-item"><span class="news-date">[Nov 2025]</span><span class="news-text">Participated in the NSU AI, IoT &amp; Robotics Day, 2025.</span></div>
+    <div class="news-item"><span class="news-date">[Jul 2025]</span><span class="news-text">Chosen among top-ranked submissions (Robotics Demo) at BEAR Summit &amp; National Semiconductor Symposium 2025, Dhaka.</span></div>
+  </section>
+
+  <!-- ================= EDUCATION ================= -->
+  <section id="education">
+    <h2 class="sec-head"><span class="comment">// 07</span> education</h2>
+    <div class="edu-item">
+      <div class="edu-deg">B.Sc. in Computer Science and Engineering — CGPA 3.39/4.00</div>
+      <div class="edu-meta">North South University, Dhaka · 2017 — 2021</div>
+      <div class="edu-meta">Thesis: Autonomous Obstacle Avoiding Exploring Robot (AOAVER)</div>
+    </div>
+  </section>
+
+  <!-- ================= SKILLS ================= -->
+  <section id="skills">
+    <h2 class="sec-head"><span class="comment">// 08</span> skills</h2>
+    <div class="skill-row"><span class="skill-key">robotics</span><span class="skill-val">ROS, motion planning, swarm control, embedded systems, PCB &amp; 3D design</span></div>
+    <div class="skill-row"><span class="skill-key">ai / ml</span><span class="skill-val">deep reinforcement learning, computer vision, OpenCV, segmentation</span></div>
+    <div class="skill-row"><span class="skill-key">programming</span><span class="skill-val">Python, C, JavaScript/TypeScript, HTML/CSS</span></div>
+    <div class="skill-row"><span class="skill-key">hardware</span><span class="skill-val">Raspberry Pi, Arduino, LiDAR, servo systems, sensors</span></div>
+    <div class="skill-row"><span class="skill-key">tools</span><span class="skill-val">Git, Linux, LaTeX, Android Studio, Firebase</span></div>
+  </section>
+
+</main>
+
+<!-- ================= FOOTER / CONTACT ================= -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-box">
+      <h2 class="sec-head"><span class="comment">// 09</span> contact</h2>
+      <p class="muted">Open to research collaborations and graduate research opportunities (MS/PhD).</p>
+      <div class="hero-links" style="margin-top:14px">
+        <a href="mailto:nasimmahmud1301@gmail.com">nasimmahmud1301@gmail.com</a>
+        <a href="https://github.com/Nasim-Mahmud">github/Nasim-Mahmud</a>
+        <a href="https://www.linkedin.com/in/nasim-mahmud/">linkedin/nasim-mahmud</a>
+      </div>
+    </div>
+    <p class="copy">© 2026 Nasim Mahmud Mishu · built with html + css + ts · set in JetBrains Mono</p>
+  </div>
+</footer>
+
+<div class="mockup-banner">DESIGN MOCKUP — v1 (not the final site)</div>
+
+<script>
+  // minimal theme toggle just for previewing both modes
+  const btn = document.getElementById('themeToggle');
+  btn.addEventListener('click', () => {
+    const html = document.documentElement;
+    const dark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', dark ? '' : 'dark');
+    btn.textContent = dark ? '[ light ]' : '[ dark ]';
+  });
+</script>
+</body>
+</html>

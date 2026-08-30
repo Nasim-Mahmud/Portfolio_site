@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Projects · Nasim Mahmud Mishu</title>
+<meta name="description" content="Projects by Nasim Mahmud Mishu: NIRO Educational Bot, Project Hex hexapod, AOAVER, hand gesture recognition, Shouhardo hospital accessibility platform." />
+<meta name="theme-color" content="#faf9f6" />
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ================= NAV (shared across all pages) ================= -->
+<nav id="top">
+  <div class="nav-inner">
+    <div class="nav-name"><a href="index.html"><span class="prompt">~/</span>nasim-mahmud</a></div>
+    <div class="nav-links" id="navLinks">
+      <a href="research.html">research</a>
+      <a href="experience.html">experience</a>
+      <a href="projects.html">projects</a>
+      <a href="publications.html">publications</a>
+      <a href="contact.html">contact</a>
+    </div>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle color theme">[ light ]</button>
+      <button class="menu-btn" id="menuToggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false">[ menu ]</button>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap-wide">
+
+  <!-- ================= PROJECTS ================= -->
+  <section id="projects" class="reveal">
+    <h1 class="sec-head"><span class="comment">// 01</span> projects</h1>
+    <p class="page-intro">Robots, assistive systems, and research builds. Open a card for the full write-up.</p>
+    <div class="proj-grid">
+
+      <article class="proj-card" data-project="niro-bot" tabindex="0" role="button" aria-haspopup="dialog" aria-label="NIRO Educational Bot: open project details">
+        <img class="proj-img" src="assets/img/project-niro-bot.svg" alt="NIRO Educational Bot" width="640" height="320" />
+        <div class="proj-body">
+          <div class="proj-title">NIRO Educational Bot</div>
+          <div class="proj-meta">NIRO Lab · Oct 2024 - Present</div>
+          <p class="proj-desc">Educational robot for hands-on learning and research with a customizable 3D-printed chassis, PCB design, and differential drive; gyroscope, IR sensors, motors, and WiFi integrated with Raspberry Pi and Arduino.</p>
+          <div class="proj-tech"><b>→</b> Raspberry Pi · Arduino · 3D Printing · PCB Design</div>
+          <div class="proj-more" aria-hidden="true">details →</div>
+        </div>
+      </article>
+
+      <article class="proj-card" data-project="project-hex" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Project Hex: open project details">
+        <img class="proj-img" src="assets/img/project-hex.svg" alt="Project Hex hexapod robot" width="640" height="320" />
+        <div class="proj-body">
+          <div class="proj-title">Project Hex</div>
+          <div class="proj-meta">NIRO Lab · Feb 2025 - Present</div>
+          <p class="proj-desc">Hexapod robot with six 3-DOF legs and 18 high-torque bus servos for robust mobility on uneven terrain; LiPo powered, Arduino real-time control, modular sensor support.</p>
+          <div class="proj-tech"><b>→</b> Arduino · Servo Control · LiPo · Modular Design</div>
+          <div class="proj-more" aria-hidden="true">details →</div>
+        </div>
+      </article>
+
+      <article class="proj-card" data-project="aoaver" tabindex="0" role="button" aria-haspopup="dialog" aria-label="AOAVER: open project details">
+        <img class="proj-img" src="assets/img/project-aoaver.svg" alt="AOAVER autonomous exploring robot" width="640" height="320" />
+        <div class="proj-body">
+          <div class="proj-title">AOAVER: Autonomous Obstacle Avoiding Exploring Robot</div>
+          <div class="proj-meta">Capstone (CSE499) · 2021 - 2022</div>
+          <p class="proj-desc">Autonomous search-and-rescue robot for disaster zones with real-time perception, obstacle avoidance, and exploration in hazardous environments.</p>
+          <div class="proj-tech"><b>→</b> Python · ROS · YDLidar X4 · Raspberry Pi · Arduino</div>
+          <div class="proj-more" aria-hidden="true">details →</div>
+        </div>
+      </article>
+
+      <article class="proj-card" data-project="gesture" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Hand Gesture Recognition for Seniors and Disabled: open project details">
+        <img class="proj-img" src="assets/img/project-gesture.svg" alt="Hand gesture recognition system" width="640" height="320" />
+        <div class="proj-body">
+          <div class="proj-title">Hand Gesture Recognition for Seniors &amp; Disabled</div>
+          <div class="proj-meta">Junior Design (CSE299) · Spring 2020</div>
+          <p class="proj-desc">Low-cost gesture-based emergency calling system using computer vision and a companion mobile app, for users unable to move or use voice.</p>
+          <div class="proj-tech"><b>→</b> Python · OpenCV · Raspberry Pi · Firebase · Android</div>
+          <div class="proj-more" aria-hidden="true">details →</div>
+        </div>
+      </article>
+
+      <article class="proj-card" data-project="shouhardo" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Shouhardo hospital accessibility platform: open project details">
+        <img class="proj-img" src="assets/img/project-shouhardo.svg" alt="Shouhardo hospital accessibility platform" width="640" height="320" />
+        <div class="proj-body">
+          <div class="proj-title">Shouhardo: Hospital Accessibility Platform</div>
+          <div class="proj-meta">Directed Research (CSE498R) · Fall 2021</div>
+          <p class="proj-desc">HCI-based multilingual web platform improving hospital information transparency during COVID-19, from a 32-participant qualitative study.</p>
+          <div class="proj-tech"><b>→</b> HTML · CSS · WordPress · HCI Research</div>
+          <div class="proj-more" aria-hidden="true">details →</div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= FOOTER (shared across all pages) ================= -->
+<footer>
+  <div class="wrap">
+    <p class="copy">© <span id="year">2026</span> Nasim Mahmud Mishu · built with html + css + ts · set in JetBrains Mono · <a href="#top" class="back-top">back to top ↑</a></p>
+  </div>
+</footer>
+
+<!-- ================= PROJECT DETAIL MODAL ================= -->
+<div class="modal-backdrop" id="projectModalBackdrop" hidden>
+  <div class="modal-panel" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" type="button" aria-label="Close project details">[ close ]</button>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<script src="scripts/main.js"></script>
+</body>
+</html>
